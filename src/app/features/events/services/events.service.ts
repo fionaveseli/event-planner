@@ -9,4 +9,7 @@ export class EventsService {
   searchEvents$(term: string) {
     return this.api.search(term);
   }
+  getEventById$(id: string) {
+  return this.api.getById(id);
+}
 }

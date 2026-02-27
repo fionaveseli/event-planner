@@ -4,12 +4,13 @@ import { ReactiveFormsModule, FormControl } from "@angular/forms";
 import { startWith, debounceTime, distinctUntilChanged, switchMap, finalize } from "rxjs";
 import { EventItem } from "../../../../core/models/event.models";
 import { EventsService } from "../../services/events.service";
+import { RouterLink } from "@angular/router";
 
 
 @Component({
   selector: 'app-events-list-page',
   standalone: true,
-  imports: [ReactiveFormsModule],
+imports: [ReactiveFormsModule, RouterLink],
   template: `
     <section class="page">
       <header class="header">
@@ -33,7 +34,7 @@ import { EventsService } from "../../services/events.service";
 
       <div class="list">
         @for (event of filteredEvents(); track event.id) {
-          <article class="card">
+          <article class="card" [routerLink]="['/events', event.id]">
             <div class="title">{{ event.title }}</div>
             <div class="meta">{{ event.location }} • {{ event.dateIso }}</div>
           </article>

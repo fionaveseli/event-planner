@@ -22,4 +22,9 @@ export class FakeEventsApi {
 
     return of(filtered).pipe(delay(250));
   }
+
+  getById(id: string): Observable<EventItem | null> {
+    const found = EVENTS.find(e => e.id === id) ?? null;
+    return of(found).pipe(delay(200));
+  }
 }
