@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { NotFoundPage } from './shared/pages/not-found/not-found.page';
 
 export const routes: Routes = [
   {
@@ -32,6 +33,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'dashboard',
+   component: NotFoundPage,
   },
 ];
