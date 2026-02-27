@@ -22,4 +22,8 @@ export class BookingsService {
       })
     );
   }
+
+  deleteBooking(id: string): void {
+    this._bookings.update(prev => prev.filter(b => b.id !== id));
+  }
 }

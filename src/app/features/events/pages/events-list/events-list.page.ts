@@ -14,7 +14,10 @@ imports: [ReactiveFormsModule, RouterLink],
   template: `
     <section class="page">
       <header class="header">
-        <h1>Events</h1>
+        <div class="header-row">
+          <h1>Events</h1>
+          <a class="btn" routerLink="/events/new">New event</a>
+        </div>
 
         <input
           class="search"
