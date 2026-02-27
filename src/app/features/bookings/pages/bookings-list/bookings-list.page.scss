@@ -1,0 +1,24 @@
+.page {
+  padding: 24px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn {
+  text-decoration: none;
+  border-radius: 10px;
+  padding: 8px 12px;
+  background: #111827;
+  color: #fff;
+  font-weight: 600;
+}
+
+.muted {
+  color: #6b7280;
+}
