@@ -1,12 +1,25 @@
-import { Injectable, inject } from '@angular/core';
-import { FakeBookingsApi } from '../data/fake-bookings.api';
-import type { BookingCreateRequest } from '../../../core/models/booking.models';
+import { Injectable, signal } from '@angular/core';
+import { Observable, of, delay, tap } from 'rxjs';
+import type { Booking, BookingCreateRequest } from '../../../core/models/booking.models';
 
 @Injectable({ providedIn: 'root' })
 export class BookingsService {
-  private readonly api = inject(FakeBookingsApi);
+  private readonly _bookings = signal<Booking[]>([]);
+  readonly bookings = this._bookings.asReadonly();
 
-  createBooking$(payload: BookingCreateRequest) {
-    return this.api.create(payload);
+  createBooking$(payload: BookingCreateRequest): Observable<Booking> {
+    const booking: Booking = {
+      id: crypto.randomUUID(),
+      createdAtIso: new Date().toISOString(),
+      ...payload,
+      notes: payload.notes?.trim(),
+    };
+
+    return of(booking).pipe(
+      delay(200),
+      tap((b) => {
+        this._bookings.update(prev => [b, ...prev]);
+      })
+    );
   }
 }

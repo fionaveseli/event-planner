@@ -30,7 +30,9 @@ import { Router } from '@angular/router';
 
           <select formControlName="eventId" [disabled]="isEventsLoading()">
             <option value="" disabled>Select an event…</option>
-
+            @if (isEventsLoading()) {
+              <p class="muted">Loading events…</p>
+            }
             @for (e of events(); track e.id) {
               <option [value]="e.id">{{ e.title }} — {{ e.location }} ({{ e.dateIso }})</option>
             }
@@ -39,10 +41,6 @@ import { Router } from '@angular/router';
 
         @if (isInvalid('eventId')) {
           <p class="error">Please select an event.</p>
-        }
-
-        @if (isEventsLoading()) {
-          <p class="muted">Loading events…</p>
         }
 
         <label>
@@ -126,7 +124,6 @@ export class BookingCreatePage {
     if (c.hasError('email')) return 'Please enter a valid email.';
     return null;
   }
-
 
   submit() {
     if (this.form.invalid) {

@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { BookingsService } from '../../services/bookings.service';
 
 @Component({
   selector: 'app-bookings-list-page',
@@ -12,10 +13,18 @@ import { RouterLink } from '@angular/router';
         <a class="btn" routerLink="/bookings/new">New booking</a>
       </header>
 
-      <p class="muted">List page placeholder (next step we’ll show created bookings).</p>
+      @for (b of bookings(); track b.id) {
+        <article class="card">
+          <div>{{ b.clientName }}</div>
+          <div>{{ b.clientEmail }}</div>
+        </article>
+      }
     </section>
   `,
   styleUrl: './bookings-list.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BookingsListPage {}
+export class BookingsListPage {
+  private readonly bookingsService = inject(BookingsService);
+  readonly bookings = computed(() => this.bookingsService.bookings());
+}
