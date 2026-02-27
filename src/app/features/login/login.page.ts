@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
-
 
 @Component({
   selector: 'app-login-page',
@@ -41,14 +41,19 @@ import { AuthService } from '../../core/services/auth.service';
             <p class="error">Password must be at least 6 characters.</p>
           }
 
+          @if (errorMessage()) {
+  <p class="error">{{ errorMessage() }}</p>
+}
           <button type="submit" [disabled]="form.invalid || isSubmitting()">
-            @if (isSubmitting()) { Logging in… } @else { Login }
+            @if (isSubmitting()) {
+              Logging in…
+            } @else {
+              Login
+            }
           </button>
         </form>
 
-        <p class="hint">
-          After login you'll be redirected to the dashboard.
-        </p>
+        <p class="hint">After login you'll be redirected to the dashboard.</p>
       </div>
     </section>
   `,
@@ -59,6 +64,9 @@ export class LoginPage {
   private readonly fb = inject(FormBuilder);
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
+
+  readonly errorMessage = signal<string | null>(null);
 
   readonly isSubmitting = signal(false);
 
@@ -77,18 +85,27 @@ export class LoginPage {
     return c.touched && c.invalid;
   }
 
-  async submit() {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
-
-    this.isSubmitting.set(true);
-
-    // Demo token (next step we replace with HttpClient call)
-    this.auth.login('demo-token');
-
-    this.isSubmitting.set(false);
-    await this.router.navigateByUrl('/dashboard');
+submit() {
+  if (this.form.invalid) {
+    this.form.markAllAsTouched();
+    return;
   }
+
+  this.errorMessage.set(null);
+  this.isSubmitting.set(true);
+
+  this.auth
+    .login$(this.form.getRawValue())
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe({
+      next: async () => {
+        this.isSubmitting.set(false);
+        await this.router.navigateByUrl('/dashboard');
+      },
+      error: (err) => {
+        this.isSubmitting.set(false);
+        this.errorMessage.set(err.message || 'Login failed');
+      },
+    });
+}
 }

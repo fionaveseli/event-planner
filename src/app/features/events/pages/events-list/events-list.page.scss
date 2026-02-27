@@ -1,0 +1,49 @@
+.page {
+  padding: 24px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.header {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.search {
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  outline: none;
+
+  &:focus {
+    border-color: #111827;
+  }
+}
+
+.list {
+  display: grid;
+  gap: 12px;
+}
+
+.card {
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 14px;
+  background: #fff;
+}
+
+.title {
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.meta {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.muted {
+  color: #6b7280;
+}
